@@ -14,12 +14,36 @@
 #
 # Note that the first line of the CSV is header that describes the fields--this
 # should not be loaded into a City object.
+
+class City:
+    def __init__(self, name, lat, lon):
+        self.name = name
+        self.lat = lat
+        self.lon = lon
+
+    def __str__(self):
+        output = f"{self.name},{self.lat},{self.lon}"
+        return output
+
 cities = []
 
+import csv
+import os
+
+__location__ = os.path.realpath(
+    os.path.join(os.getcwd(), os.path.dirname(__file__)))
+
+
 def cityreader(cities=[]):
+
   # TODO Implement the functionality to read from the 'cities.csv' file
   # For each city record, create a new City instance and add it to the 
   # `cities` list
+    with open(os.path.join(__location__, 'cities.csv'),'rt') as f:
+        data = csv.reader(f)
+        next(data, None)
+        for row in data:
+            cities.append(City(row[0], float(row[3]), float(row[4])))
     
     return cities
 
@@ -60,12 +84,36 @@ for c in cities:
 
 # TODO Get latitude and longitude values from the user
 
+
+##UNCOMMENT BELOW TO GET INPUT FROM USER:
+
+# input1 = input("Enter lat1,lon1: ")
+# input2 = input("Enter lat2,lon2: ")
+# lat1 = float(input1.split(",")[0])
+# lon1 = float(input1.split(",")[1])
+# lat2 = float(input2.split(",")[0])
+# lon2 = float(input2.split(",")[1])
+
 def cityreader_stretch(lat1, lon1, lat2, lon2, cities=[]):
   # within will hold the cities that fall within the specified region
-  within = []
+    within = []
+    if lat1 > lat2:
+        for item in cities:
+            if lat2 <= item.lat <= lat1 and lon2 <= item.lon <= lon1:
+                within.append(City(item.name, item.lat, item.lon))
+    else:
+        for item in cities:
+            if lat1 <= item.lat <= lat2 and lon1 <= item.lon <= lon2:
+                within.append(City(item.name, item.lat, item.lon))
 
   # TODO Ensure that the lat and lon valuse are all floats
   # Go through each city and check to see if it falls within 
   # the specified coordinates.
 
-  return within
+    return within
+
+#UNCOMMENT BELOW TO PRINT OUT CITIES
+# for i in cityreader_stretch(lat1, lon1, lat2, lon2, cities):
+#     print(i)
+
+
